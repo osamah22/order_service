@@ -31,6 +31,28 @@ definitions:
     - name
     - price_in_cents
     type: object
+  dtos.LineItemResponse:
+    properties:
+      price_in_cents:
+        type: integer
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  dtos.OrderResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dtos.LineItemResponse'
+        type: array
+      total:
+        type: integer
+    type: object
   dtos.UpdateProductRequest:
     properties:
       available_stocks:
@@ -70,10 +92,22 @@ definitions:
         items:
           $ref: '#/definitions/models.LineItem'
         type: array
+      status:
+        $ref: '#/definitions/models.OrderStatus'
       total:
         format: int64
         type: integer
     type: object
+  models.OrderStatus:
+    enum:
+    - pending
+    - completed
+    - cancelled
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusCompleted
+    - StatusCancelled
   models.Product:
     properties:
       availableStock:
@@ -188,6 +222,94 @@ paths:
               type: string
             type: object
       summary: Get an order by ID
+      tags:
+      - orders
+  /orders/{id}/cancel:
+    post:
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.OrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cancel order
+      tags:
+      - orders
+  /orders/{id}/complete:
+    post:
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set order status completed
+      tags:
+      - orders
+  /orders/{id}/pending:
+    post:
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.OrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reset order to pending
       tags:
       - orders
   /products:

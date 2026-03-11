@@ -20,7 +20,6 @@ func addRoutes(router *gin.Engine,
 	// register product routes
 	products := router.Group("/products")
 	products.GET("/", productHandler.list)
-	products.GET("/:id", productHandler.get)
 	products.POST("/", productHandler.create)
 	products.PUT("/:id", productHandler.update)
 	products.DELETE("/:id", productHandler.delete)
@@ -30,6 +29,9 @@ func addRoutes(router *gin.Engine,
 	orders.GET("/", orderHandler.list)
 	orders.GET("/:id", orderHandler.get)
 	orders.POST("/", orderHandler.create)
+	orders.POST("/:id/complete", orderHandler.complete)
+	orders.POST("/:id/cancel", orderHandler.cancel)
+	orders.POST("/:id/pending", orderHandler.pending)
 	orders.DELETE("/:id", orderHandler.delete)
 
 	// setup swagger docs

@@ -7,48 +7,9 @@ The API also includes Swagger documentation for easy exploration and testing.
 
 ## Features
 
-- Product management (create, update, delete, fetch)
-- Order creation with line items
-- Automatic order total calculation
-- Snapshot product pricing at order time
 - Clean architecture separation
 - Swagger API documentation
-- UUID-based entities
-- Input validation
-- Transaction-safe order creation
 - Docker-ready project structure
-
-## Folder Architecture
-
-```
-order-service/
-├── cmd/
-│ └── api/
-│ ├── main.go
-│ ├── routes.go
-│ ├── products.go
-│ └── orders.go
-│
-├── internal/
-│ ├── models/
-│ │ ├── product.go
-│ │ └── order.go
-│ │
-│ ├── services/
-│ │ ├── product_service.go
-│ │ └── order_service.go
-│ │
-│ └── dtos/
-│ ├── product_request.go
-│ └── order_request.go
-│
-├── docs/
-│ └── swagger files
-│
-├── go.mod
-├── go.sum
-└── README.md
-```
 
 ## Tech Stack
 
@@ -58,7 +19,7 @@ order-service/
 - SQLite (default database)
 - Swagger (Swaggo)
 
-## Running the Project
+## Running the Project (Docker)
 
 1. Clone the repository
 
@@ -111,4 +72,36 @@ Relationships:
 orders
 └── line_items
 └── product_id
+```
+
+## Folder Architecture
+
+```
+order-service/
+├── cmd/
+│ └── api/
+│ ├── main.go
+│ ├── routes.go
+│ ├── products.go
+│ └── orders.go
+│
+├── internal/
+│ ├── models/
+│ │ ├── product.go
+│ │ └── order.go
+│ │
+│ ├── services/
+│ │ ├── product_service.go
+│ │ └── order_service.go
+│ │
+│ └── dtos/
+│ ├── product_request.go
+│ └── order_request.go
+│
+├── docs/
+│ └── swagger files
+│
+├── go.mod
+├── go.sum
+└── README.md
 ```

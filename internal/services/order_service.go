@@ -76,6 +76,26 @@ func (svc *OrderService) ListOrders(ctx context.Context) ([]models.Order, error)
 	return orders, nil
 }
 
+func (svc *OrderService) UpdateStatus(ctx context.Context, id uuid.UUID, status models.OrderStatus) (*models.Order, error) {
+
+	var order models.Order
+	if err := svc.DB.WithContext(ctx).First(&order, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+
+	if order.Status == models.StatusCompleted || order.Status == models.StatusCancelled {
+		return nil, errors.New("order already finalized")
+	}
+
+	order.Status = status
+
+	if err := svc.DB.WithContext(ctx).Save(&order).Error; err != nil {
+		return nil, err
+	}
+
+	return &order, nil
+}
+
 // DeleteOrder removes an order by ID
 func (svc *OrderService) DeleteOrder(ctx context.Context, id uuid.UUID) error {
 	tx := svc.DB.WithContext(ctx).Delete(&models.Order{}, "id = ?", id)

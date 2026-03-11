@@ -120,6 +120,113 @@ func (h *orderHandler) create(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
+// UpdateOrderStatus godoc
+// @Summary Set order status completed
+// @Tags orders
+// @Produce json
+// @Param id path string true "Order ID"
+// @Success 200 "Success"
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /orders/{id}/complete [post]
+func (h *orderHandler) complete(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+
+	order, err := h.orderSvc.GetOrder(c.Request.Context(), id)
+
+	if err != nil {
+		if isNotFound(err) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	order, err = h.orderSvc.UpdateStatus(c.Request.Context(), id, models.StatusCompleted)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Header("Location", fmt.Sprintf("/orders/%s", order.ID))
+	response := dtos.ToOrderResponse(order)
+	c.JSON(http.StatusCreated, response)
+}
+
+// CancelOrder godoc
+// @Summary Cancel order
+// @Tags orders
+// @Produce json
+// @Param id path string true "Order ID"
+// @Success 200 {object} dtos.OrderResponse
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /orders/{id}/cancel [post]
+func (h *orderHandler) cancel(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	order, err := h.orderSvc.UpdateStatus(
+		c.Request.Context(),
+		id,
+		models.StatusCancelled,
+	)
+
+	if err != nil {
+		if isNotFound(err) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response := dtos.ToOrderResponse(order)
+	c.JSON(http.StatusOK, response)
+}
+
+// ResetOrder godoc
+// @Summary Reset order to pending
+// @Tags orders
+// @Produce json
+// @Param id path string true "Order ID"
+// @Success 200 {object} dtos.OrderResponse
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /orders/{id}/pending [post]
+func (h *orderHandler) pending(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	order, err := h.orderSvc.UpdateStatus(
+		c.Request.Context(),
+		id,
+		models.StatusPending,
+	)
+
+	if err != nil {
+		if isNotFound(err) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response := dtos.ToOrderResponse(order)
+	c.JSON(http.StatusOK, response)
+}
+
 // DeleteOrder godoc
 // @Summary Delete an order by ID
 // @Tags orders

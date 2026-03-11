@@ -8,10 +8,19 @@ import (
 	"gorm.io/gorm"
 )
 
+type OrderStatus string
+
+const (
+	StatusPending   OrderStatus = "pending"
+	StatusCompleted OrderStatus = "completed"
+	StatusCancelled OrderStatus = "cancelled"
+)
+
 type Order struct {
 	ID        uuid.UUID  `gorm:"type:uuid;primaryKey"`
 	Items     []LineItem `gorm:"foreignKey:OrderID"`
 	Total     int64
+	Status    OrderStatus `gorm:"default:'pending'"`
 	CreatedAt time.Time
 }
 

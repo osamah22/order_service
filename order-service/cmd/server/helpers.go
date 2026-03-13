@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 
-	"github.com/osamah22/order_service/internal/services"
+	"github.com/osamah22/nazim/order_service/internal/services"
 )
 
 func isNotFound(err error) bool {

@@ -3,7 +3,7 @@ package dtos
 import (
 	"time"
 
-	"github.com/osamah22/order_service/internal/models"
+	"github.com/osamah22/nazim/order_service/internal/models"
 )
 
 type CreateOrderRequest struct {

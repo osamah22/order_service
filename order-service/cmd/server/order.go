@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
-	"github.com/osamah22/order_service/internal/dtos"
-	"github.com/osamah22/order_service/internal/models"
-	"github.com/osamah22/order_service/internal/services"
+	"github.com/osamah22/nazim/order_service/internal/dtos"
+	"github.com/osamah22/nazim/order_service/internal/models"
+	"github.com/osamah22/nazim/order_service/internal/services"
 )
 
 type orderHandler struct {

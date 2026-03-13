@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/osamah22/order_service/internal/models"
+	"github.com/osamah22/nazim/order_service/internal/models"
 	"gorm.io/gorm"
 )
 
